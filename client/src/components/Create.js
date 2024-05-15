@@ -16,12 +16,29 @@ const FormComponent = () => {
     f_Image: "",
   });
   const [error, setError] = useState("");
+
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+    const { name } = e.target;
+    if (e.target.type === "file") {
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData({
+          ...formData,
+          [name]: reader.result,
+        });
+      };
+
+      if (file) {
+        reader.readAsDataURL(file);
+      }
+    } else {
+      const { name, value } = e.target;
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -242,8 +259,15 @@ const FormComponent = () => {
                 className="form-control"
                 id="f_Image"
                 name="f_Image"
+                accept=".png"
                 onChange={handleChange}
               />
+              {formData.f_Image && (
+                <div>
+                  <h6 className="mt-2 fs-6 display-4 "><i class="fa-solid fa-eye"></i> Preview</h6>
+                  <Image src={formData.f_Image} alt="Preview" width={200}/>
+                </div>
+              )}
             </div>
             <div className="d-flex justify-content-center">
               <button type="submit" className="btn btn-primary mt-4">

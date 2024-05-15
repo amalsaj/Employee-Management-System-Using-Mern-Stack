@@ -4,17 +4,20 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Sign_in from "./components/Sign_in";
 import "./App.css";
 import Dashboard from "./components/Dashboard";
-import ThemeContext from "./components/Context";
 import Create from "./components/Create";
+import Test from "./components/Test";
+
+
 function App() {
   return (
     <div className="App">
       <Router>
         <Routes>
-          <Route path="/" element={<SignUpForm />} />
-          <Route path="/sign" element={<Sign_in />} />
+          {/* <Route path="/" element={<SignUpForm />} /> */}
+          <Route path="/" element={<Sign_in />} />
           <Route path="/dash" element={<Dashboard />} />
-          <Route path="/create" element={<Create/>} />
+          <Route path="/create" element={<Create />} />
+          <Route path="/test" element={<Test />} />
         </Routes>
       </Router>
     </div>

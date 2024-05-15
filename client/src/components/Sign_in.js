@@ -10,23 +10,21 @@ const LoginForm = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
-  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
-      // Send POST request to server to log in
-
-      await axios.post("/login", { username, password });
+      const response = await axios.post("/login", { username, password });
+      const { token } = response.data;
+      localStorage.setItem("token", token);
       setError("");
-      navigate(`/dash?username=${username}`);
+      navigate(`/dash?username=${username}`)
     } catch (error) {
       // Handle error
       if (error.response && error.response.data) {
-        setError(error.response.data); // Display error message from server
+        setError(error.response.data);
       } else {
-        setError("An error occurred. Please try again."); // Display generic error message
+        setError("An error occurred. Please try again.");
       }
     }
   };

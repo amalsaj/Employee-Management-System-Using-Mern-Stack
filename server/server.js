@@ -1,4 +1,7 @@
 const express = require("express");
+const cors = require("cors");
+const jwt = require("jsonwebtoken");
+const cookieParser = require("cookie-parser");
 const path = require("path");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
@@ -9,32 +12,98 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Serve images from the 'uploads' directory
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
+app.use(cors());
+app.use(cookieParser());
 
 // Connect to MongoDB
-mongoose.connect("mongodb://localhost:27017/sample_mflix");
-
+mongoose.connect("mongodb://localhost:27017/employee");
 // Set up body parser middleware
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json({ limit: "50mb" }));
+app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 app.use(bodyParser.json());
 
 // Serve static files from the React app
-app.use(express.static(path.join(__dirname, "client/build")));
+app.use(express.static(path.join(__dirname, "../client/build")));
+
+const authenticateUser = (req, res, next) => {
+  const cookieToken = req.cookies.token;
+
+  if (!cookieToken) {
+    console.log("Token is not provided");
+    return res
+      .status(401)
+      .json({ message: "Unauthorized - Token is not provided" });
+  }
+  jwt.verify(cookieToken, "employee", (err, decoded) => {
+    if (err) {
+      if (err.name === "TokenExpiredError") {
+        console.error("Token has expired");
+        return res.redirect("/");
+      } else {
+        console.error("Token verification failed:", err);
+        return res
+          .status(401)
+          .json({ message: "Unauthorized - Invalid token" });
+      }
+    }
+    console.log(`Authorized - Valid token: ${cookieToken}`);
+    next();
+  });
+};
+
+app.get("/test", (req, res) => {
+  res.sendFile(path.join(__dirname, "../client/build", "index.html"));
+});
 
 // Route to serve the React app
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "client/build", "index.html"));
+  res.sendFile(path.join(__dirname, "../client/build", "index.html"));
+});
+
+// Define a route handler for the "/dash" URL
+app.get("/dash", authenticateUser, (req, res) => {
+  res.sendFile(path.join(__dirname, "../client/build", "index.html"));
 });
 
 app.get("/data", async (req, res) => {
   try {
-    const allData = await emp.find();
+    console.log(req.query)
+    // Get page and pageSize from query parameters with default values
+    const page = parseInt(req.query.page) || 1;
+    const pageSize = parseInt(req.query.pageSize) || 5;
 
+    // Calculate skip and limit values
+    const skip = (page - 1) * pageSize;
+    const limit = pageSize;
+
+    // Fetch data with pagination
+    const allData = await emp.find().skip(skip).limit(limit);
+
+    // Fetch total count of documents
+    const totalCount = await emp.countDocuments();
+
+    // Calculate total pages
+    const totalPages = Math.ceil(totalCount / pageSize);
+
+    console.log(
+      `skip:${skip},limit:${limit},totalCount:${totalCount},totalpages:${totalPages}`
+    );
+
+    // Check if any data was found
     if (allData.length === 0) {
       return res.status(404).send("No data found.");
     }
 
-    res.json(allData);
+    // Respond with paginated data and metadata
+    res.json({
+      page,
+      pageSize,
+      totalCount,
+      totalPages,
+      data: allData,
+    });
   } catch (error) {
     console.error("Error:", error);
     res.status(500).send("Internal server error.");
@@ -63,7 +132,7 @@ app.post("/signup", async (req, res) => {
     await newUser.save();
 
     // Sign up successful
-    res.status(201).send("Sign-up successful.");
+    res.status(201).send("Sign-up Successful.");
   } catch (error) {
     console.error("Error:", error);
     res.status(500).send("Internal server error.");
@@ -88,9 +157,12 @@ app.post("/login", async (req, res) => {
     if (user.password !== password) {
       return res.status(401).send("Incorrect password.");
     }
-
-    // Login successful
-    res.status(201).send("Sign-up successful.");
+    //genarate token for authentication
+    const token = jwt.sign({ username }, "employee", { expiresIn: "1h" });
+    res.cookie("token", token, {
+      httpOnly: true,
+    });
+    res.json({ token, message: "Sign in successful" });
   } catch (error) {
     console.error("Error:", error);
     res.status(500).send("Internal server error.");
