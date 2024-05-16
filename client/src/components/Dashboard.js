@@ -6,6 +6,7 @@ import Image from "../Images/default-monochrome-black.svg";
 import Badge from "react-bootstrap/Badge";
 import Button from "react-bootstrap/Button";
 import { Card, Table, Pagination } from "react-bootstrap";
+import { toast, ToastContainer } from "react-toastify";
 import axios from "axios";
 
 const Dashboard = () => {
@@ -104,6 +105,24 @@ const Dashboard = () => {
     }
   };
 
+  const Toast = () => {
+    showToastMessage();
+    setTimeout(() => {
+      navigate("/");
+    }, 1000);
+  };
+
+  const showToastMessage = () => {
+    toast.success("Logout Successfully", {
+      position: "bottom-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
+
   return (
     <div>
       {/* Header Section */}
@@ -139,24 +158,6 @@ const Dashboard = () => {
                 </Link>
               </li>
 
-              {/* <li className="nav-item me-3">
-                <a className="nav-link theme fw-bold">
-                  <i className="fas fa-palette" onClick={toggleColorPicker}></i>
-                  {colorPickerVisible ? (
-                    <input
-                      value="##0070bb"
-                      onChange={(e) => setColor(e.target.value)}
-                      className="visible ms-1"
-                      type="color"
-                      id="exampleColorInput"
-                      title="Choose your color"
-                    />
-                  ) : (
-                    " Theme"
-                  )}
-                </a>
-              </li> */}
-
               <li className="nav-item me-2">
                 <Link className="nav-link theme">
                   <div className="d-flex flex-column justify-content-center">
@@ -183,7 +184,11 @@ const Dashboard = () => {
               </li>
 
               <li className="nav-item me-3">
-                <Link className="nav-link theme fw-bold" to="/" title="Logout">
+                <Link
+                  className="nav-link theme fw-bold"
+                  title="Logout"
+                  onClick={() => Toast()}
+                >
                   <i className="fa-solid fa-arrow-right-from-bracket"></i>
                 </Link>
               </li>
@@ -191,6 +196,7 @@ const Dashboard = () => {
           </div>
         </div>
       </nav>
+      <ToastContainer />
 
       {/* Dashboard Content */}
       <div className="container mt-4">

@@ -53,7 +53,7 @@ const authenticateUser = (req, res, next) => {
   });
 };
 
-app.get("/test", (req, res) => {
+app.get("/signup", (req, res) => {
   res.sendFile(path.join(__dirname, "../client/build", "index.html"));
 });
 

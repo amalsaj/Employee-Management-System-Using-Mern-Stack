@@ -18,6 +18,7 @@ function App() {
           <Route path="/dash" element={<Dashboard />} />
           <Route path="/create" element={<Create />} />
           <Route path="/test" element={<Test />} />
+          <Route path="/signup" element={<SignUpForm />} />
         </Routes>
       </Router>
     </div>
