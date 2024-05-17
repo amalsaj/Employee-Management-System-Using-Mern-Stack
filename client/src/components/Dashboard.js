@@ -5,7 +5,7 @@ import data2 from "../Images/data2.png";
 import Image from "../Images/default-monochrome-black.svg";
 import Badge from "react-bootstrap/Badge";
 import Button from "react-bootstrap/Button";
-import { Card, Table, Pagination } from "react-bootstrap";
+import { Card, Table, Pagination ,Nav} from "react-bootstrap";
 import { toast, ToastContainer } from "react-toastify";
 import axios from "axios";
 

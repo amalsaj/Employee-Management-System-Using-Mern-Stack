@@ -69,7 +69,7 @@ app.get("/dash", authenticateUser, (req, res) => {
 
 app.get("/data", async (req, res) => {
   try {
-    console.log(req.query)
+    console.log(req.query);
     // Get page and pageSize from query parameters with default values
     const page = parseInt(req.query.page) || 1;
     const pageSize = parseInt(req.query.pageSize) || 5;
@@ -120,9 +120,28 @@ app.post("/signup", async (req, res) => {
     if (existingUser) {
       return res.status(409).send("Username already exists.");
     }
+    // Validating the username and password with regex
+    const usernameRegex = /^[a-zA-Z][a-zA-Z0-9_-]{2,15}$/;
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
-    if (!username && !password) {
-      return res.status(400).send("Username and password are required.");
+    if (usernameRegex.test(username)) {
+      console.log("Valid username");
+    } else {
+      return res
+        .status(400)
+        .send(
+          "Your username should start with a letter and be 3 to 16 characters long, allowing letters, numbers, underscores, and hyphens."
+        );
+    }
+    if (passwordRegex.test(password)) {
+      console.log("Valid password");
+    } else {
+      return res
+        .status(400)
+        .send(
+          "Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one digit, and one special character."
+        );
     }
 
     // Create a new user document

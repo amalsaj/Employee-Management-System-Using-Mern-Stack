@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ThemeContext from "./Context";
+import Logo from "../Images/logo.avif";
 import axios from "axios";
 import { Image, Button } from "react-bootstrap";
 import card from "../Images/card3.svg";
@@ -55,18 +56,20 @@ const LoginForm = () => {
     <div className="container mt-5">
       <div className="row">
         <div className="col-4 centered-image">
-          <Image
-            src={card}
-            alt=""
-            style={{
-              width: "200px",
-              height: "600px",
-            }}
-            rounded
-          />
+          <div className="center">
+            <Image
+              src={card}
+              alt=""
+              style={{
+                width: "200px",
+                height: "600px",
+              }}
+              rounded
+            />
+          </div>
         </div>
         <div
-          className="col-8 text-center m-0"
+          className="col-8 text-center mt-2"
           style={{
             position: "fixed",
             top: 20,
@@ -78,13 +81,13 @@ const LoginForm = () => {
           <div className="card mt-4 body_card ">
             <div className="card-header bg-white">
               <Image
-                src="https://99designs-blog.imgix.net/blog/wp-content/uploads/2016/09/att-logo-600x600.jpg?auto=format&q=60&fit=max&w=930"
+                src={Logo}
                 alt="Logo"
                 style={{ width: "50px", height: "50px" }}
                 roundedCircle
               />
 
-              <h1 className="mt-2">
+              <h1 className="mt-1">
                 <span
                   style={{
                     backgroundImage:
@@ -112,7 +115,7 @@ const LoginForm = () => {
               </h1>
             </div>
             <div className="card-body">
-              <form onSubmit={handleSubmit}>
+              <form onSubmit={handleSubmit} autocomplete="off">
                 <div className="mb-3">
                   <label htmlFor="username" className="form-label">
                     Username
