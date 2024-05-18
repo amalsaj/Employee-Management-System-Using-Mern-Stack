@@ -1,11 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import ThemeContext from "./Context";
 import Logo from "../Images/logo.avif";
 import axios from "axios";
 import { Image, Button } from "react-bootstrap";
 import card from "../Images/card3.svg";
-import Dashboard from "./Dashboard";
 import { toast, ToastContainer } from "react-toastify";
 
 const LoginForm = () => {
@@ -109,12 +107,13 @@ const LoginForm = () => {
                   Again!
                 </span>
               </h1>
-              <h1 className="text-secondary fw-lighter fs-6 mt-3">
+              <h1 className="text-secondary logo mt-3">
                 Please Log In to Access Your Account <br></br>and Continue Using
                 Our Services
               </h1>
             </div>
             <div className="card-body">
+            {error && <p style={{ color: "red" }}>{error}</p>}
               <form onSubmit={handleSubmit} autocomplete="off">
                 <div className="mb-3">
                   <label htmlFor="username" className="form-label">

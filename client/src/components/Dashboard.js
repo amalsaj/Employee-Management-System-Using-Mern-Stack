@@ -1,22 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, Link, useNavigate } from "react-router-dom";
-import Container from "react-bootstrap/Container";
+import { useLocation,  useNavigate } from "react-router-dom";
 import Img from "../Images/emp2.svg";
 import data2 from "../Images/data2.png";
 import Image from "../Images/logo.png";
-import Badge from "react-bootstrap/Badge";
-import Button from "react-bootstrap/Button";
-import { Card, Table, Pagination, Navbar, Nav } from "react-bootstrap";
+import {Pagination, Navbar, Nav } from "react-bootstrap";
 import { toast, ToastContainer } from "react-toastify";
 import axios from "axios";
 
 const Dashboard = () => {
   const [error, setError] = useState("");
-  const [colorPickerVisible, setColorPickerVisible] = useState(false);
-  const [color, setColor] = useState("#0070bb ");
-  const toggleColorPicker = () => {
-    setColorPickerVisible(!colorPickerVisible);
-  };
   const navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
