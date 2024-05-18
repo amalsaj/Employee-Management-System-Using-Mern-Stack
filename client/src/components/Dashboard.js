@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, Link, useNavigate } from "react-router-dom";
+import Container from "react-bootstrap/Container";
 import Img from "../Images/emp2.svg";
 import data2 from "../Images/data2.png";
-import Image from "../Images/default-monochrome-black.svg";
+import Image from "../Images/logo.png";
 import Badge from "react-bootstrap/Badge";
 import Button from "react-bootstrap/Button";
-import { Card, Table, Pagination ,Nav} from "react-bootstrap";
+import { Card, Table, Pagination, Navbar, Nav } from "react-bootstrap";
 import { toast, ToastContainer } from "react-toastify";
 import axios from "axios";
 
@@ -88,13 +89,16 @@ const Dashboard = () => {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    setIsEditing(false);
     try {
       await axios.put("/edit", { editFormData });
       await axios.get("/data");
+      setIsEditing(false);
       setError("");
-      navigate(`/dash`);
-      refreshPage();
+      showToastMessage('Update Successfully');
+      setTimeout(() => {
+        navigate(`/dash`);
+        refreshPage();
+      }, 1000);
     } catch (error) {
       // Handle error
       if (error.response && error.response.data) {
@@ -106,14 +110,14 @@ const Dashboard = () => {
   };
 
   const Toast = () => {
-    showToastMessage();
+    showToastMessage('Logot Successfully');
     setTimeout(() => {
       navigate("/");
     }, 1000);
   };
 
-  const showToastMessage = () => {
-    toast.success("Logout Successfully", {
+  const showToastMessage = (message) => {
+    toast.success(message, {
       position: "bottom-right",
       autoClose: 2000,
       hideProgressBar: false,
@@ -125,81 +129,321 @@ const Dashboard = () => {
 
   return (
     <div>
-      {/* Header Section */}
-      <nav
-        className="navbar navbar-expand-lg dash dash_font"
-        style={{ backgroundColor: color }}
-      >
-        <div className="container">
-          <Link
-            className="navbar-brand d-flex justify-content-start align-items-center"
-            to="/"
-          >
+      <div className="col-2 Nav text-white ">
+        <Navbar expand="md" className="flex-column">
+          <Navbar.Brand>
             <img
               src={Image}
-              alt="Logo"
-              style={{ width: "31px", height: "31px" }}
+              style={{ width: "40px", height: "20px" }}
+              alt="Img"
             />
-          </Link>
 
-          <div className="collapse navbar-collapse justify-content-end">
-            <ul className="navbar-nav">
-              <li className="nav-item active me-3">
-                <Link className="nav-link fw-bold theme" to="/dash">
-                  Home
-                </Link>
-              </li>
-              <li className="nav-itemm me-3">
-                <Link
-                  className="nav-link fw-bold theme"
-                  onClick={() => SetCreate(!create)}
+            <h1 className="text-white mt-3 fw-bold display-1 logo">
+              MAIN MENU
+            </h1>
+          </Navbar.Brand>
+          <Navbar.Toggle
+            className="ms-5"
+            aria-controls="basic-navbar-nav"
+            style={{
+              fontSize: "xx-small",
+            }}
+          />
+          <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className="flex-column ">
+              <Nav.Link className="text-white">
+                {" "}
+                <i class="fa-solid fa-house me-2 "></i> Dashboard
+              </Nav.Link>
+              <Nav.Link
+                className="text-white mt-2"
+                href="/dash"
+                onClick={() => SetCreate(!create)}
+              >
+                <i class="fa-solid fa-list-ul me-2"></i> Employee List
+              </Nav.Link>
+              <Nav.Link className="text-white mt-2">
+                <i class="fa-solid fa-gear me-2"></i> Settings
+              </Nav.Link>
+              <Nav.Link className="text-white mt-2" onClick={() => Toast()}>
+                <i className="fa-solid fa-arrow-right-from-bracket me-2"></i>{" "}
+                Logout
+              </Nav.Link>
+              <Nav.Link className="text-white mt-5 text-center">
+                <img
+                  src={data2}
+                  style={{ width: "30px", height: "30px" }}
+                  alt="Img"
+                />
+                <h1 className="text-white fw-bold mt-1 logo display-5">
+                  {" "}
+                  {first_name && first_name}
+                </h1>
+              </Nav.Link>
+            </Nav>
+          </Navbar.Collapse>
+        </Navbar>
+      </div>
+      <ToastContainer />
+      <div
+        className="col-10 dashbaord"
+        style={{
+          position: "fixed",
+          right: 0,
+          width: "87%",
+          height: "100%",
+        }}
+      >
+        <div>
+          <div className="container">
+            <div className="row">
+              <div className="col-12 fs-1">
+                <div className="search-wrapper">
+                  <input
+                    className="border-1 search fs-6"
+                    type="text"
+                    placeholder="search"
+                  />
+                  <i className="fa-solid fa-magnifying-glass search-icon"></i>
+                </div>
+              </div>
+              <div className="col-12  d-flex justify-content-end mt-4">
+                <button
+                  type="button"
+                  class="btn bg-white position-relative create_btn me-5"
                 >
-                  Employee List
-                </Link>
-              </li>
-
-              <li className="nav-item me-2">
-                <Link className="nav-link theme">
-                  <div className="d-flex flex-column justify-content-center">
-                    <img
-                      src={data2}
-                      style={{ width: "30px", height: "30px" }}
-                      alt="Img"
-                    />
-                    <span
-                      className="profile fw-bold"
-                      style={{
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap",
-                        width: "50px",
-                        height: "14px",
-                        paddingLeft: "4px",
-                      }}
-                    >
-                      {first_name && first_name}
-                    </span>
+                  Count
+                  <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    {formDataList.data && formDataList.data.length}
+                    <span class="visually-hidden">unread messages</span>
+                  </span>
+                </button>
+                <button
+                  className=" btn create_btn bg-white me-2"
+                  onClick={() => {
+                    navigate(`/create`);
+                  }}
+                >
+                  <i class="fa-solid fa-plus me-1"></i> Create
+                </button>
+              </div>
+              <div className="col-12 mt-2">
+                <h2 className=" display-6 table_title fw-bolder">
+                  EMPLOYEE LIST
+                </h2>
+                <>
+                  <div className="table-responsive mt-4">
+                    <table className="table table-hover">
+                      <thead className="logo text-secondary">
+                        <tr>
+                          <th>#</th>
+                          <th>Image</th>
+                          <th>Name</th>
+                          <th>Email</th>
+                          <th>Mobile</th>
+                          <th>Designation</th>
+                          <th>Gender</th>
+                          <th>Course</th>
+                          <th>Create Date</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody className="logo">
+                        {formDataList.data &&
+                          formDataList.data.map((formData, index) => (
+                            <tr key={index}>
+                              <td>{index + 1}</td>
+                              <td>
+                                <img
+                                  src={formData.f_Image}
+                                  alt="User"
+                                  width="50"
+                                  className="img-thumbnail"
+                                />
+                              </td>
+                              <td>{formData.f_Name}</td>
+                              <td>{formData.f_Email}</td>
+                              <td>{formData.f_Mobile}</td>
+                              <td>{formData.f_Designation}</td>
+                              <td>{formData.f_gender}</td>
+                              <td>{formData.f_Course}</td>
+                              <td>{formData.f_Createdate}</td>
+                              <td>
+                                <i
+                                  className="fa-regular fa-pen-to-square icon_style"
+                                  onClick={() => handleEditClick(formData)}
+                                ></i>{" "}
+                              </td>
+                            </tr>
+                          ))}
+                      </tbody>
+                    </table>
                   </div>
-                </Link>
-              </li>
 
-              <li className="nav-item me-3">
-                <Link
-                  className="nav-link theme fw-bold"
-                  title="Logout"
-                  onClick={() => Toast()}
-                >
-                  <i className="fa-solid fa-arrow-right-from-bracket"></i>
-                </Link>
-              </li>
-            </ul>
+                  <Pagination size="sm" className="page">
+                    <Pagination.First
+                      onClick={() => handlePageChange(1)}
+                      disabled={formDataList.active === 1}
+                    />
+                    <Pagination.Prev
+                      onClick={() => handlePageChange(formDataList.active - 1)}
+                      disabled={formDataList.active === 1}
+                    />
+                    {[...Array(formDataList.totalPages).keys()].map(
+                      (pageNumber) => (
+                        <Pagination.Item
+                          onClick={() => handlePageChange(pageNumber + 1)}
+                          key={pageNumber + 1}
+                          active={pageNumber + 1 === formDataList.active}
+                        >
+                          {pageNumber + 1}
+                        </Pagination.Item>
+                      )
+                    )}
+                    <Pagination.Next
+                      onClick={() => handlePageChange(formDataList.active + 1)}
+                      disabled={formDataList.active === formDataList.totalPages}
+                    />
+                    <Pagination.Last
+                      onClick={() => handlePageChange(formDataList.totalPages)}
+                      disabled={formDataList.active === formDataList.totalPages}
+                    />
+                  </Pagination>
+
+                  {isEditing && (
+                    <div className="modal">
+                      <div className="modal-content">
+                        <div className="card">
+                          <div className="card-header text-center head text-white">
+                            <img
+                              src={Img}
+                              alt=""
+                              width={70}
+                              className="rounded"
+                            />
+                            <h2 className="fs-4 mt-1 mb-1 ">
+                              Update Information
+                            </h2>
+                          </div>
+                          <div className="card-body table_body m-3">
+                          {error && <p style={{ color: "red" }}>{error}</p>}
+                            <div>
+                              <form onSubmit={handleFormSubmit}>
+                                <div className="form-group">
+                                  <label htmlFor="f_Image">Image</label>
+                                  <input
+                                    type="file" 
+                                    className="form-control"
+                                    id="f_Image"
+                                    name="f_Image"
+                                    onChange={handleFileInputChange}
+                                  />
+                                </div>
+                                <div className="form-group">
+                                  <label htmlFor="f_Name">Name</label>
+                                  <input
+                                    type="text"
+                                    className="form-control"
+                                    id="f_Name"
+                                    name="f_Name"
+                                    value={editFormData.f_Name}
+                                    onChange={handleInputChange}
+                                  />
+                                </div>
+                                <div className="form-group">
+                                  <label htmlFor="f_Email">Email</label>
+                                  <input
+                                    type="email"
+                                    className="form-control"
+                                    id="f_Email"
+                                    name="f_Email"
+                                    value={editFormData.f_Email}
+                                    onChange={handleInputChange}
+                                  />
+                                </div>
+                                <div className="form-group">
+                                  <label htmlFor="f_Mobile">Mobile</label>
+                                  <input
+                                    type="text"
+                                    className="form-control"
+                                    id="f_Mobile"
+                                    name="f_Mobile"
+                                    value={editFormData.f_Mobile}
+                                    onChange={handleInputChange}
+                                  />
+                                </div>
+                                <div className="form-group">
+                                  <label htmlFor="f_Designation">
+                                    Designation
+                                  </label>
+                                  <input
+                                    type="text"
+                                    className="form-control"
+                                    id="f_Designation"
+                                    name="f_Designation"
+                                    value={editFormData.f_Designation}
+                                    onChange={handleInputChange}
+                                  />
+                                </div>
+                                <div className="form-group">
+                                  <label htmlFor="f_gender">Gender</label>
+                                  <input
+                                    type="text"
+                                    className="form-control"
+                                    id="f_gender"
+                                    name="f_gender"
+                                    value={editFormData.f_gender}
+                                    onChange={handleInputChange}
+                                  />
+                                </div>
+                                <div className="form-group">
+                                  <label htmlFor="f_Course">Course</label>
+                                  <input
+                                    type="text"
+                                    className="form-control"
+                                    id="f_Course"
+                                    name="f_Course"
+                                    value={editFormData.f_Course}
+                                    onChange={handleInputChange}
+                                  />
+                                </div>
+                                <div className="form-group">
+                                  <label htmlFor="f_Createdate">
+                                    Create Date
+                                  </label>
+                                  <input
+                                    type="date"
+                                    className="form-control"
+                                    id="f_Createdate"
+                                    name="f_Createdate"
+                                    value={editFormData.f_Createdate}
+                                    onChange={handleInputChange}
+                                  />
+                                </div>
+
+                                <div className="d-flex justify-content-center">
+                                  <button
+                                    type="submit"
+                                    className="btn btn-primary mt-2"
+                                  >
+                                    Update
+                                  </button>
+                                </div>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </>
+              </div>
+            </div>
           </div>
         </div>
-      </nav>
-      <ToastContainer />
+      </div>
 
-      {/* Dashboard Content */}
-      <div className="container mt-4">
+      {/* <div className="container mt-4">
         <div className="row">
           <div className="col-md-12">
             {create ? (
@@ -218,7 +462,7 @@ const Dashboard = () => {
               </Card>
             ) : (
               <div>
-                {/* Navigation Bar */}
+
                 <nav className="navbar navbar-expand-lg navbar-light bg-light table_body">
                   <div className="container">
                     <div className="collapse navbar-collapse justify-content-end">
@@ -259,7 +503,7 @@ const Dashboard = () => {
                   </div>
                 </nav>
 
-                {/* Table */}
+             
                 <div className="container mt-4 mb-4">
                   <h2 className=" text-dark  fs-4 table_body">Employee List</h2>
                   <>
@@ -492,7 +736,7 @@ const Dashboard = () => {
             )}
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

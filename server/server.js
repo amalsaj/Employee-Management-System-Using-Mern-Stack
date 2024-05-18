@@ -244,6 +244,7 @@ app.put("/edit", async (req, res) => {
   console.log(req.body);
   try {
     const {
+      _id,
       f_Name,
       f_Email,
       f_Mobile,
@@ -256,14 +257,23 @@ app.put("/edit", async (req, res) => {
 
     // Check if editFormData exists
     if (!req.body.editFormData) {
-      return res.status(400).send("editFormData is required.");
+      return res.status(400).send("Data is required.");
     }
 
-    const existingUser = await emp.findOne({ f_Email });
+    const existingEmail = await emp.findOne({
+      f_Email: f_Email,
+      _id: { $ne: _id },
+    });
+
+    if (existingEmail) {
+      return res.status(400).send("Email already exists!");
+    }
+
+    const existingUser = await emp.findOne({ _id });
     if (existingUser) {
-      // Update all values in the existing document
+      console.log(existingUser);
       await emp.findOneAndUpdate(
-        { f_Email },
+        { _id },
         {
           f_Name,
           f_Email,
@@ -273,7 +283,8 @@ app.put("/edit", async (req, res) => {
           f_Course,
           f_Createdate,
           f_Image,
-        }
+        },
+        { new: true }
       );
 
       return res.status(200).send("Employee updated successfully.");
