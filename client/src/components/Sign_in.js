@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Logo from "../Images/logo.avif";
 import axios from "axios";
-import { Image, Button } from "react-bootstrap";
+import { Image, Button, Container, Row, Col, Card } from "react-bootstrap";
 import card from "../Images/card3.svg";
 import { toast, ToastContainer } from "react-toastify";
 
@@ -51,37 +51,35 @@ const LoginForm = () => {
     });
   };
   return (
-    <div className="container mt-5">
-      <div className="row">
-        <div className="col-4 centered-image">
-          <div className="center">
+    <Container fluid>
+      <Row style={{ height: "100vh" }}>
+        <Col xs={12} md={4} lg={4} className="centered-image">
+          <div className="center" style={{height:'100%'}}>
             <Image
               src={card}
-              alt=""
+              alt="Card Image"
               style={{
-                width: "200px",
-                height: "600px",
+                width: "100%",
+                maxWidth: "200px",
+                height: "auto",
               }}
               rounded
             />
           </div>
-        </div>
-        <div
-          className="col-8 text-center mt-2"
-          style={{
-            position: "fixed",
-            top: 20,
-            right: 50,
-            width: "50%",
-            height: "100%",
-          }}
-        >
-          <div className="card mt-4 body_card ">
-            <div className="card-header bg-white">
+        </Col>
+
+        <Col xs={12} md={8} lg={8} className="text-center">
+          <div className=" align-content-center">
+          <Card className="body_card m-5" >
+            <Card.Header className="bg-white">
               <Image
                 src={Logo}
                 alt="Logo"
-                style={{ width: "50px", height: "50px" }}
+                style={{
+                  width: "100%",
+                  maxWidth: "50px",
+                  height: "auto",
+                }}
                 roundedCircle
               />
 
@@ -111,9 +109,9 @@ const LoginForm = () => {
                 Please Log In to Access Your Account <br></br>and Continue Using
                 Our Services
               </h1>
-            </div>
-            <div className="card-body">
-            {error && <p style={{ color: "red" }}>{error}</p>}
+            </Card.Header>
+            <Card.Body>
+              {error && <p style={{ color: "red" }}>{error}</p>}
               <form onSubmit={handleSubmit} autocomplete="off">
                 <div className="mb-3">
                   <label htmlFor="username" className="form-label">
@@ -146,8 +144,8 @@ const LoginForm = () => {
                   <Button type="submit" className="btn loginSign">
                     Login
                   </Button>
-                  <ToastContainer />
                 </div>
+                <ToastContainer />
                 <div className="justify-content-center d-flex align-items-center mt-5">
                   <h1 className="text-secondary logo">
                     Doesn't have an account yet?{" "}
@@ -157,11 +155,13 @@ const LoginForm = () => {
                   </h1>
                 </div>
               </form>
-            </div>
+            </Card.Body>
+          </Card>
           </div>
-        </div>
-      </div>
-    </div>
+       
+        </Col>
+      </Row>
+    </Container>
   );
 };
 

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Logo from "../Images/logo.avif";
-import { Image, Button } from "react-bootstrap";
+import { Image, Button ,Container, Row, Col, Card} from "react-bootstrap";
 import { toast, ToastContainer } from "react-toastify";
 import card from "../Images/card4.svg";
 
@@ -53,11 +53,11 @@ const SignUpForm = () => {
   };
 
   return (
-    <div className="container">
-      <div className="row">
-        <div className="col-4 centered-image">
-          <div className=" m-5  text-white">
-            <h1 className="fw-lighter fw-bold">
+    <Container fluid>
+      <Row style={{ height: "100vh" }}>
+        <Col className="centered-image" xs={12} md={4} lg={4}>
+          <div className="m-4 text-white">
+            <h1 className="fw-bold">
               Join Us and <br></br> Unlock Endless <br></br>Possibilities!
             </h1>
             <h1 className="logo">
@@ -67,33 +67,31 @@ const SignUpForm = () => {
           </div>
 
           <div className="center">
-            <Image
+          <Image className="mt-5 img-fluid xs-img"
               src={card}
-              alt=""
+              alt="Card Image"
               style={{
-                width: "300px",
-                height: "200px",
+                width: "100%",
+                maxWidth: "200px",
+                height: "auto",
               }}
               rounded
             />
           </div>
-        </div>
-        <div
-          className="col-8 text-center mt-4"
-          style={{
-            position: "fixed",
-            top: 20,
-            right: 50,
-            width: "50%",
-            height: "100%",
-          }}
+        </Col>
+        <Col xs={12} md={8} lg={8}
+          className="text-center"
         >
-          <div className="card mt-4 body_card ">
-            <div className="card-header bg-white">
-              <Image
+          <Card className=" m-5 body_card">
+          <Card.Header className="bg-white">
+          <Image xs={1}
                 src={Logo}
                 alt="Logo"
-                style={{ width: "50px", height: "50px" }}
+                style={{
+                  width: "100%",
+                  maxWidth: "50px",
+                  height: "auto",
+                }}
                 roundedCircle
               />
               <h1 className="mt-1">
@@ -118,8 +116,8 @@ const SignUpForm = () => {
                   Started
                 </span>
               </h1>
-            </div>
-            <div className="card-body bg-white">
+            </Card.Header>
+            <Card.Body className="bg-white">
               <form onSubmit={handleSubmit} autocomplete="off">
                 <div className="form-group">
                   <label className="mb-2" htmlFor="username">Username</label>
@@ -159,11 +157,11 @@ const SignUpForm = () => {
                   </h1>
                 </div>
               </form>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+    </Container>
   );
 };
 
