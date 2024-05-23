@@ -69,7 +69,7 @@ const LoginForm = () => {
         </Col>
 
         <Col xs={12} md={8} lg={8} className="text-center">
-          <div className=" align-content-center">
+          <div className="align-content-center">
           <Card className="body_card m-5" >
             <Card.Header className="bg-white">
               <Image

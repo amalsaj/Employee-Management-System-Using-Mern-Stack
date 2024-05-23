@@ -189,7 +189,7 @@
 .create_btn {
   background-color: #003153 !important;
   font-size: x-small;
-  color: #ffffff;
+  color: #ffffff !important;
 }
 
 .centered-image {

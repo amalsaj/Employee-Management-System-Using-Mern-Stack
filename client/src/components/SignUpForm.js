@@ -61,7 +61,7 @@ const SignUpForm = () => {
               Join Us and <br></br> Unlock Endless <br></br>Possibilities!
             </h1>
             <h1 className="logo">
-              Welcome! We're excited to have you on board. <br></br>Let's embark
+              Welcome! We're excited to have you on board.<br></br>Let's embark
               on this amazing journey together!
             </h1>
           </div>
