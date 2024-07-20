@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Logo from "../Images/logo.avif";
-import { Image, Button ,Container, Row, Col, Card} from "react-bootstrap";
+import { Image, Button, Container, Row, Col, Card } from "react-bootstrap";
 import { toast, ToastContainer } from "react-toastify";
 import card from "../Images/card4.svg";
 
@@ -10,7 +10,7 @@ const SignUpForm = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [err, setError] = useState("");
 
   const showToastMessage = () => {
     toast.success("Account Created Successfully", {
@@ -27,7 +27,10 @@ const SignUpForm = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post("http://localhost:5000/signup", { username, password });
+      const response = await axios.post("http://localhost:5000/signup", {
+        username,
+        password,
+      });
       console.log(response.data);
       setError("");
       showToastMessage();
@@ -48,6 +51,7 @@ const SignUpForm = () => {
         });
       } else {
         setError("An error occurred. Please try again.");
+        console.log(`${err}`);
       }
     }
   };
@@ -67,7 +71,8 @@ const SignUpForm = () => {
           </div>
 
           <div className="center">
-          <Image className="mt-5 img-fluid xs-img"
+            <Image
+              className="mt-5 img-fluid xs-img"
               src={card}
               alt="Card Image"
               style={{
@@ -79,12 +84,11 @@ const SignUpForm = () => {
             />
           </div>
         </Col>
-        <Col xs={12} md={8} lg={8}
-          className="text-center"
-        >
+        <Col xs={12} md={8} lg={8} className="text-center">
           <Card className=" m-5 body_card">
-          <Card.Header className="bg-white">
-          <Image xs={1}
+            <Card.Header className="bg-white">
+              <Image
+                xs={1}
                 src={Logo}
                 alt="Logo"
                 style={{
@@ -120,7 +124,9 @@ const SignUpForm = () => {
             <Card.Body className="bg-white">
               <form onSubmit={handleSubmit} autocomplete="off">
                 <div className="form-group">
-                  <label className="mb-2" htmlFor="username">Username</label>
+                  <label className="mb-2" htmlFor="username">
+                    Username
+                  </label>
                   <input
                     type="text"
                     className="form-control"
@@ -132,7 +138,9 @@ const SignUpForm = () => {
                 </div>
 
                 <div className="form-group mt-3">
-                  <label className="mb-2" htmlFor="password">Password</label>
+                  <label className="mb-2" htmlFor="password">
+                    Password
+                  </label>
                   <input
                     type="password"
                     className="form-control"
@@ -150,9 +158,9 @@ const SignUpForm = () => {
                 </div>
                 <div className="justify-content-center d-flex align-items-center mt-5">
                   <h1 className="text-secondary logo">
-                   Already had an Account?{" "}
+                    Already had an Account?{" "}
                     <a href="/" className=" text-decoration-none">
-                     Login
+                      Login
                     </a>{" "}
                   </h1>
                 </div>
