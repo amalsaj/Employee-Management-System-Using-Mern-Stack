@@ -45,7 +45,7 @@ const FormComponent = () => {
     e.preventDefault();
 
     try {
-      await axios.post("/create", { formData });
+      await axios.post("http://localhost:5000/createEmployee", { formData });
       setError("");
       navigate(`/dash`);
     } catch (error) {

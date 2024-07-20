@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { useLocation,  useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Img from "../Images/emp2.svg";
 import data2 from "../Images/data2.png";
 import Image from "../Images/logo.png";
-import {Pagination, Navbar, Nav } from "react-bootstrap";
+import { Pagination, Navbar, Nav } from "react-bootstrap";
 import { toast, ToastContainer } from "react-toastify";
 import axios from "axios";
 
@@ -35,9 +35,12 @@ const Dashboard = () => {
 
   const fetchData = async (page) => {
     try {
-      const response = await axios.get("/data", {
-        params: { page: page, pageSize: 5 },
-      });
+      const response = await axios.get(
+        "http://localhost:5000/getEmployeeData",
+        {
+          params: { page: page, pageSize: 5 },
+        }
+      );
       setFormDataList({
         data: response.data.data,
         active: page,
@@ -82,11 +85,11 @@ const Dashboard = () => {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put("/edit", { editFormData });
-      await axios.get("/data");
+      await axios.put("http://localhost:5000/editEmployee", { editFormData });
+      await axios.get("http://localhost:5000/getEmployeeData");
       setIsEditing(false);
       setError("");
-      showToastMessage('Update Successfully');
+      showToastMessage("Update Successfully");
       setTimeout(() => {
         navigate(`/dash`);
         refreshPage();
@@ -102,7 +105,7 @@ const Dashboard = () => {
   };
 
   const Toast = () => {
-    showToastMessage('Logot Successfully');
+    showToastMessage("Logot Successfully");
     setTimeout(() => {
       navigate("/");
     }, 1000);
@@ -149,7 +152,7 @@ const Dashboard = () => {
               </Nav.Link>
               <Nav.Link
                 className="text-white mt-2"
-                href="/dash"
+                href="/getEmployeeData"
                 onClick={() => SetCreate(!create)}
               >
                 <i class="fa-solid fa-list-ul me-2"></i> Employee List
@@ -318,13 +321,13 @@ const Dashboard = () => {
                             </h2>
                           </div>
                           <div className="card-body table_body m-3">
-                          {error && <p style={{ color: "red" }}>{error}</p>}
+                            {error && <p style={{ color: "red" }}>{error}</p>}
                             <div>
                               <form onSubmit={handleFormSubmit}>
                                 <div className="form-group">
                                   <label htmlFor="f_Image">Image</label>
                                   <input
-                                    type="file" 
+                                    type="file"
                                     className="form-control"
                                     id="f_Image"
                                     name="f_Image"

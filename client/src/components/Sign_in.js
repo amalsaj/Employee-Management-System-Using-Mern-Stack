@@ -15,12 +15,12 @@ const LoginForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("/login", { username, password });
+      const response = await axios.post("http://localhost:5000/signin", { username, password });
       const { token } = response.data;
       localStorage.setItem("token", token);
       showToastMessage();
       setTimeout(() => {
-        navigate(`/dash?username=${username}`);
+        navigate(`/getEmployeeData?username=${username}`);
       }, 1000);
     } catch (error) {
       if (error.response && error.response.data) {

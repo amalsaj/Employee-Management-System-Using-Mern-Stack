@@ -1,16 +1,16 @@
 const mongoose = require("mongoose");
+const password = process.env.PASSWORD;
 
-const EmpSchema = new mongoose.Schema({
-  f_Name: String,
-  f_Email: String,
-  f_Mobile: Number,
-  f_Designation: String,
-  f_gender: { type: String, enum: ["Male", "Female", "Other"] },
-  f_Course: [String],
-  f_Createdate: { type: Date, default: Date.now },
-  f_Image: String,
-});
+const connectDB = async () => {
+  try {
+    await mongoose.connect(
+      `mongodb+srv://amalsaji218:${password}@cluster0.wfm2xt4.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`
+    );
+    console.log("MongoDB connected successfully");
+  } catch (error) {
+    console.error("Error connecting to MongoDB:", error.message);
+    process.exit(1);
+  }
+};
 
-const emp = mongoose.model("t_Employee", EmpSchema);
-
-module.exports = emp;
+module.exports = connectDB;

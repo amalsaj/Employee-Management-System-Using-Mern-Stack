@@ -27,7 +27,7 @@ const SignUpForm = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post("/signup", { username, password });
+      const response = await axios.post("http://localhost:5000/signup", { username, password });
       console.log(response.data);
       setError("");
       showToastMessage();
