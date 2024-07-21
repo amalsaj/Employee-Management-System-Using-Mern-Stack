@@ -25,14 +25,8 @@ const signin = async (req, res) => {
     const token = jwt.sign({ username }, process.env.JWT_SECRET, {
       expiresIn: "3h",
     });
-    console.log("token: ", token);
 
-    // Set the cookie with the token
-    res.cookie("token", token, {
-      httpOnly: true,
-    });
-
-    res.json({ message: "Sign in successful" });
+    res.json({ message: "Sign in successful", token: token });
   } catch (error) {
     console.error("Error:", error);
     res.status(500).send("Internal server error.");

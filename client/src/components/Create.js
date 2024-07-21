@@ -5,6 +5,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 const FormComponent = () => {
   const navigate = useNavigate();
+  const today = new Date().toISOString().split("T")[0];
   const [formData, setFormData] = useState({
     f_Name: "",
     f_Email: "",
@@ -47,13 +48,13 @@ const FormComponent = () => {
     try {
       await axios.post("http://localhost:5000/createEmployee", { formData });
       setError("");
-      navigate(`/dash`);
+      navigate(`/getEmployeeData`);
     } catch (error) {
       // Handle error
       if (error.response && error.response.data) {
-        setError(error.response.data); // Display error message from server
+        setError(error.response.data);
       } else {
-        setError("An error occurred. Please try again."); // Display generic error message
+        setError("An error occurred. Please try again.");
       }
     }
   };
@@ -122,8 +123,13 @@ const FormComponent = () => {
                 <option value="HR">HR</option>
                 <option value="Manager">Manager</option>
                 <option value="Sales">Sales</option>
+                <option value="Developer">Developer</option>
+                <option value="Designer">Designer</option>
+                <option value="Marketing">Marketing</option>
+                <option value="Support">Support</option>
               </select>
             </div>
+
             <div className="form-group">
               <label className="font_card" htmlFor="f_gender">
                 Gender
@@ -177,64 +183,26 @@ const FormComponent = () => {
               <label className="font_card" htmlFor="f_Course">
                 Course
               </label>
-              <div>
-                <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    id="mca"
-                    name="f_Course"
-                    value="MCA"
-                    onChange={handleChange}
-                    checked={formData.f_Course.includes("MCA")}
-                  />
-                  <label className="form-check-label" htmlFor="mca">
-                    MCA
-                  </label>
-                </div>
-                <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    id="bca"
-                    name="f_Course"
-                    value="BCA"
-                    onChange={handleChange}
-                    checked={formData.f_Course.includes("BCA")}
-                  />
-                  <label className="form-check-label" htmlFor="bca">
-                    BCA
-                  </label>
-                </div>
-                <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    id="bsc"
-                    name="f_Course"
-                    value="BSC"
-                    onChange={handleChange}
-                    checked={formData.f_Course.includes("BSC")}
-                  />
-                  <label className="form-check-label" htmlFor="bsc">
-                    BSC
-                  </label>
-                </div>
-                <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    id="btech"
-                    name="f_Course"
-                    value="BTECH"
-                    onChange={handleChange}
-                    checked={formData.f_Course.includes("BTECH")}
-                  />
-                  <label className="form-check-label" htmlFor="btech">
-                    BTECH
-                  </label>
-                </div>
-              </div>
+              <select
+                className="form-control"
+                id="f_Course"
+                name="f_Course"
+                value={formData.f_Course}
+                onChange={handleChange}
+              >
+                <option value="">Select a course</option>
+                <option value="MCA">MCA</option>
+                <option value="BCA">BCA</option>
+                <option value="BSC">BSC</option>
+                <option value="BTECH">B-TECH</option>
+                <option value="MBA">MBA</option>
+                <option value="MSC">MSC</option>
+                <option value="MTECH">M-TECH</option>
+                <option value="BA">BA</option>
+                <option value="MA">MA</option>
+                <option value="PHD">PhD</option>
+                <option value="DIPLOMA">Diploma</option>
+              </select>
             </div>
 
             <div className="form-group">
@@ -248,6 +216,7 @@ const FormComponent = () => {
                 name="f_Createdate"
                 value={formData.f_Createdate}
                 onChange={handleChange}
+                min={today}
               />
             </div>
             <div className="form-group">
@@ -264,8 +233,10 @@ const FormComponent = () => {
               />
               {formData.f_Image && (
                 <div>
-                  <h6 className="mt-2 fs-6 display-4 "><i class="fa-solid fa-eye"></i> Preview</h6>
-                  <Image src={formData.f_Image} alt="Preview" width={200}/>
+                  <h6 className="mt-2 fs-6 display-4 ">
+                    <i class="fa-solid fa-eye"></i> Preview
+                  </h6>
+                  <Image src={formData.f_Image} alt="Preview" width={200} />
                 </div>
               )}
             </div>

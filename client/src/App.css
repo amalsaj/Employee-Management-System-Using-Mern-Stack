@@ -1,3 +1,9 @@
+body {
+  font-family: "Poppins", sans-serif;
+  font-weight: 300;
+  font-style: normal;
+}
+
 .regular {
   font-family: "Zeyada", cursive !important;
   font-weight: 500;
@@ -11,10 +17,8 @@
   color: aqua;
 }
 .shadow {
-  /* background: linear-gradient(to bottom, #ffe4e1, rgba(255, 255, 255, 0.5)); */
   background-color: #ffe4e1;
 }
-/* styles.css */
 .footer-section {
   font-size: smaller;
   color: #8b8589;
@@ -50,12 +54,11 @@
   padding-left: 6px;
 }
 .dark {
-  /* background-color: #ffffff !important; */
   border-radius: 6px;
   padding-left: 6px !important;
 }
 .Nav {
-  font-size: x-small;
+  font-size: 12px;
   background: linear-gradient(180deg, #0070bb, #ffffff);
   position: fixed;
   top: 0;
@@ -104,13 +107,14 @@
   font-size: x-small !important;
   letter-spacing: 2px !important;
 }
+.logo1 {
+  margin-top: 29px;
+}
 .data_card {
   width: 100vh !important;
   height: fit-content;
   border-radius: 12px !important;
   background-color: #f0f8ff;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 .head {
   background-color: #0070bb !important;
@@ -136,8 +140,14 @@
 .table_body {
   background-color: #f0f8ff !important;
 }
+.welcomeCard{
+  margin-top: 100px;
+}
 .dash1 {
-  height: 200px;
+  margin-top: 50px;
+  height: 500px;
+  width: 50ww;
+  text-align: center;
 }
 .edit {
   background-color: #ff7538;
@@ -155,9 +165,9 @@
   border: none;
   border-radius: 25px;
   background-color: #fff;
-  top: 5px !important;
-  left: 200px !important;
-  width: 150vh !important;
+  top: 20px !important;
+  left: 228px !important;
+  width: 129vh !important;
 }
 .profile {
   color: aliceblue;
@@ -192,6 +202,12 @@
   color: #ffffff !important;
 }
 
+.create_btn2 {
+  background-color: #003153 !important;
+  font-size: large;
+  color: #ffffff !important;
+}
+
 .centered-image {
   background-repeat: no-repeat;
   background: linear-gradient(to right, #0070bb, #ffffff);
@@ -200,7 +216,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  /* height: 100%; */
 }
 
 .table_title {
@@ -209,7 +224,6 @@
   color: #0070bb;
 }
 
-/* custom.css */
 .table {
   background-color: #fff;
   color: #000000;
@@ -235,8 +249,13 @@ tbody tr {
 .dashbaord {
   background-color: #f2f3f4;
 }
-
-/* SearchInput.css */
+.photo {
+  padding-top: 27px;
+  margin-left: -21px;
+}
+.logout {
+  margin-left: 33px;
+}
 .search-wrapper {
   position: relative;
   width: 100%;

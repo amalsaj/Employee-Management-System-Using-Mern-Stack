@@ -1,21 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Img from "../Images/emp2.svg";
 import data2 from "../Images/data2.png";
 import Image from "../Images/logo.png";
-import { Pagination, Navbar, Nav } from "react-bootstrap";
+import { Pagination, Navbar, Nav, Card, Button } from "react-bootstrap";
 import { toast, ToastContainer } from "react-toastify";
 import axios from "axios";
 
 const Dashboard = () => {
+  const [showWelcome, setShowWelcome] = useState(true);
   const [error, setError] = useState("");
   const navigate = useNavigate();
-  const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  const username_head = queryParams.get("username");
+  const token = localStorage.getItem("token");
+  const user = localStorage.getItem("user");
+  const value = localStorage.getItem("value");
   let first_name;
-  if (username_head !== null) {
-    first_name = username_head.split(" ")[0];
+  if (user !== null) {
+    first_name = user.split(" ")[0];
   } else {
     console.log("username_head is null.");
   }
@@ -25,7 +26,6 @@ const Dashboard = () => {
     active: 1,
     totalPages: 0,
   });
-  const [create, SetCreate] = useState(false);
   const [editFormData, setEditFormData] = useState({});
   const [isEditing, setIsEditing] = useState(false);
 
@@ -39,8 +39,12 @@ const Dashboard = () => {
         "http://localhost:5000/getEmployeeData",
         {
           params: { page: page, pageSize: 5 },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
+      localStorage.setItem("value",response.data.totalPages);
       setFormDataList({
         data: response.data.data,
         active: page,
@@ -65,6 +69,11 @@ const Dashboard = () => {
     setIsEditing(true);
   };
 
+  const handleClick = () => {
+    navigate("/getEmployeeData");
+    setShowWelcome(false);
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setEditFormData({ ...editFormData, [name]: value });
@@ -86,16 +95,14 @@ const Dashboard = () => {
     e.preventDefault();
     try {
       await axios.put("http://localhost:5000/editEmployee", { editFormData });
-      await axios.get("http://localhost:5000/getEmployeeData");
       setIsEditing(false);
       setError("");
       showToastMessage("Update Successfully");
       setTimeout(() => {
-        navigate(`/dash`);
+        navigate(`/getEmployeeData`);
         refreshPage();
       }, 1000);
     } catch (error) {
-      // Handle error
       if (error.response && error.response.data) {
         setError(error.response.data);
       } else {
@@ -126,16 +133,12 @@ const Dashboard = () => {
     <div>
       <div className="col-2 Nav text-white ">
         <Navbar expand="md" className="flex-column">
-          <Navbar.Brand>
+          <Navbar.Brand className="logo1">
             <img
               src={Image}
-              style={{ width: "40px", height: "20px" }}
+              style={{ width: "50px", height: "30px" }}
               alt="Img"
             />
-
-            <h1 className="text-white mt-3 fw-bold display-1 logo">
-              MAIN MENU
-            </h1>
           </Navbar.Brand>
           <Navbar.Toggle
             className="ms-5"
@@ -145,26 +148,18 @@ const Dashboard = () => {
             }}
           />
           <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="flex-column ">
+            <Nav className="flex-column mt-4">
               <Nav.Link className="text-white">
                 {" "}
                 <i class="fa-solid fa-house me-2 "></i> Dashboard
               </Nav.Link>
-              <Nav.Link
-                className="text-white mt-2"
-                href="/getEmployeeData"
-                onClick={() => SetCreate(!create)}
-              >
+              <Nav.Link className="text-white mt-2" onClick={handleClick}>
                 <i class="fa-solid fa-list-ul me-2"></i> Employee List
               </Nav.Link>
               <Nav.Link className="text-white mt-2">
                 <i class="fa-solid fa-gear me-2"></i> Settings
               </Nav.Link>
-              <Nav.Link className="text-white mt-2" onClick={() => Toast()}>
-                <i className="fa-solid fa-arrow-right-from-bracket me-2"></i>{" "}
-                Logout
-              </Nav.Link>
-              <Nav.Link className="text-white mt-5 text-center">
+              <Nav.Link className="text-white mt-5 text-center photo">
                 <img
                   src={data2}
                   style={{ width: "30px", height: "30px" }}
@@ -174,6 +169,12 @@ const Dashboard = () => {
                   {" "}
                   {first_name && first_name}
                 </h1>
+              </Nav.Link>
+              <Nav.Link
+                className="text-white mt-2 logout"
+                onClick={() => Toast()}
+              >
+                <i className="fa-solid fa-arrow-right-from-bracket me-2"></i>{" "}
               </Nav.Link>
             </Nav>
           </Navbar.Collapse>
@@ -192,247 +193,278 @@ const Dashboard = () => {
         <div>
           <div className="container">
             <div className="row">
-              <div className="col-12 fs-1">
-                <div className="search-wrapper">
-                  <input
-                    className="border-1 search fs-6"
-                    type="text"
-                    placeholder="search"
-                  />
-                  <i className="fa-solid fa-magnifying-glass search-icon"></i>
+              {showWelcome && value === 0 ? (
+                <div className="notEmployee">
+                  <Card className="dash1 table_body">
+                    <Card.Body className="welcomeCard">
+                      <Card.Title className="fs-1">
+                        Welcome, {first_name && first_name}!
+                      </Card.Title>
+                      <Card.Text>
+                        Add a new employee to your team and assign roles.
+                      </Card.Text>
+                      <Button
+                        className="create_btn2"
+                        variant="primary"
+                        onClick={() => {
+                          navigate(`/create`);
+                        }}
+                      >
+                        Add Employee
+                      </Button>
+                    </Card.Body>
+                  </Card>
                 </div>
-              </div>
-              <div className="col-12  d-flex justify-content-end mt-4">
-                <button
-                  type="button"
-                  class="btn bg-white position-relative create_btn me-5"
-                >
-                  Count
-                  <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                    {formDataList.data && formDataList.data.length}
-                    <span class="visually-hidden">unread messages</span>
-                  </span>
-                </button>
-                <button
-                  className=" btn create_btn bg-white me-2"
-                  onClick={() => {
-                    navigate(`/create`);
-                  }}
-                >
-                  <i class="fa-solid fa-plus me-1"></i> Create
-                </button>
-              </div>
-              <div className="col-12 mt-2">
-                <h2 className=" display-6 table_title fw-bolder">
-                  EMPLOYEE LIST
-                </h2>
-                <>
-                  <div className="table-responsive mt-4">
-                    <table className="table table-hover">
-                      <thead className="logo text-secondary">
-                        <tr>
-                          <th>#</th>
-                          <th>Image</th>
-                          <th>Name</th>
-                          <th>Email</th>
-                          <th>Mobile</th>
-                          <th>Designation</th>
-                          <th>Gender</th>
-                          <th>Course</th>
-                          <th>Create Date</th>
-                          <th></th>
-                        </tr>
-                      </thead>
-                      <tbody className="logo">
-                        {formDataList.data &&
-                          formDataList.data.map((formData, index) => (
-                            <tr key={index}>
-                              <td>{index + 1}</td>
-                              <td>
-                                <img
-                                  src={formData.f_Image}
-                                  alt="User"
-                                  width="50"
-                                  className="img-thumbnail"
-                                />
-                              </td>
-                              <td>{formData.f_Name}</td>
-                              <td>{formData.f_Email}</td>
-                              <td>{formData.f_Mobile}</td>
-                              <td>{formData.f_Designation}</td>
-                              <td>{formData.f_gender}</td>
-                              <td>{formData.f_Course}</td>
-                              <td>{formData.f_Createdate}</td>
-                              <td>
-                                <i
-                                  className="fa-regular fa-pen-to-square icon_style"
-                                  onClick={() => handleEditClick(formData)}
-                                ></i>{" "}
-                              </td>
-                            </tr>
-                          ))}
-                      </tbody>
-                    </table>
+              ) : (
+                <div className="employee">
+                  <div className="col-12 fs-1">
+                    <div className="search-wrapper">
+                      <input
+                        className="border-1 search fs-6"
+                        type="text"
+                        placeholder="search"
+                      />
+                      <i className="fa-solid fa-magnifying-glass search-icon"></i>
+                    </div>
                   </div>
-
-                  <Pagination size="sm" className="page">
-                    <Pagination.First
-                      onClick={() => handlePageChange(1)}
-                      disabled={formDataList.active === 1}
-                    />
-                    <Pagination.Prev
-                      onClick={() => handlePageChange(formDataList.active - 1)}
-                      disabled={formDataList.active === 1}
-                    />
-                    {[...Array(formDataList.totalPages).keys()].map(
-                      (pageNumber) => (
-                        <Pagination.Item
-                          onClick={() => handlePageChange(pageNumber + 1)}
-                          key={pageNumber + 1}
-                          active={pageNumber + 1 === formDataList.active}
-                        >
-                          {pageNumber + 1}
-                        </Pagination.Item>
-                      )
-                    )}
-                    <Pagination.Next
-                      onClick={() => handlePageChange(formDataList.active + 1)}
-                      disabled={formDataList.active === formDataList.totalPages}
-                    />
-                    <Pagination.Last
-                      onClick={() => handlePageChange(formDataList.totalPages)}
-                      disabled={formDataList.active === formDataList.totalPages}
-                    />
-                  </Pagination>
-
-                  {isEditing && (
-                    <div className="modal">
-                      <div className="modal-content">
-                        <div className="card">
-                          <div className="card-header text-center head text-white">
-                            <img
-                              src={Img}
-                              alt=""
-                              width={70}
-                              className="rounded"
-                            />
-                            <h2 className="fs-4 mt-1 mb-1 ">
-                              Update Information
-                            </h2>
-                          </div>
-                          <div className="card-body table_body m-3">
-                            {error && <p style={{ color: "red" }}>{error}</p>}
-                            <div>
-                              <form onSubmit={handleFormSubmit}>
-                                <div className="form-group">
-                                  <label htmlFor="f_Image">Image</label>
-                                  <input
-                                    type="file"
-                                    className="form-control"
-                                    id="f_Image"
-                                    name="f_Image"
-                                    onChange={handleFileInputChange}
+                  <div className="col-12 d-flex justify-content-end mt-4">
+                    <button
+                      type="button"
+                      className="btn bg-white position-relative create_btn me-5"
+                    >
+                      Count
+                      <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        {formDataList.data && formDataList.data.length}
+                        <span className="visually-hidden">unread messages</span>
+                      </span>
+                    </button>
+                    <button
+                      className="btn create_btn bg-white me-2"
+                      onClick={() => {
+                        navigate(`/create`);
+                      }}
+                    >
+                      <i className="fa-solid fa-plus me-1"></i> Create
+                    </button>
+                  </div>
+                  <div className="col-12 mt-2">
+                    <h2 className="display-6 table_title fw-bolder">
+                      EMPLOYEE LIST
+                    </h2>
+                    <div className="table-responsive mt-4">
+                      <table className="table table-hover">
+                        <thead className="logo text-secondary">
+                          <tr>
+                            <th>#</th>
+                            <th>Image</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Mobile</th>
+                            <th>Designation</th>
+                            <th>Gender</th>
+                            <th>Course</th>
+                            <th>Create Date</th>
+                            <th></th>
+                          </tr>
+                        </thead>
+                        <tbody className="logo">
+                          {formDataList.data &&
+                            formDataList.data.map((formData, index) => (
+                              <tr key={index}>
+                                <td>{index + 1}</td>
+                                <td>
+                                  <img
+                                    src={formData.f_Image}
+                                    alt="User"
+                                    width="50"
+                                    className="img-thumbnail"
                                   />
-                                </div>
-                                <div className="form-group">
-                                  <label htmlFor="f_Name">Name</label>
-                                  <input
-                                    type="text"
-                                    className="form-control"
-                                    id="f_Name"
-                                    name="f_Name"
-                                    value={editFormData.f_Name}
-                                    onChange={handleInputChange}
-                                  />
-                                </div>
-                                <div className="form-group">
-                                  <label htmlFor="f_Email">Email</label>
-                                  <input
-                                    type="email"
-                                    className="form-control"
-                                    id="f_Email"
-                                    name="f_Email"
-                                    value={editFormData.f_Email}
-                                    onChange={handleInputChange}
-                                  />
-                                </div>
-                                <div className="form-group">
-                                  <label htmlFor="f_Mobile">Mobile</label>
-                                  <input
-                                    type="text"
-                                    className="form-control"
-                                    id="f_Mobile"
-                                    name="f_Mobile"
-                                    value={editFormData.f_Mobile}
-                                    onChange={handleInputChange}
-                                  />
-                                </div>
-                                <div className="form-group">
-                                  <label htmlFor="f_Designation">
-                                    Designation
-                                  </label>
-                                  <input
-                                    type="text"
-                                    className="form-control"
-                                    id="f_Designation"
-                                    name="f_Designation"
-                                    value={editFormData.f_Designation}
-                                    onChange={handleInputChange}
-                                  />
-                                </div>
-                                <div className="form-group">
-                                  <label htmlFor="f_gender">Gender</label>
-                                  <input
-                                    type="text"
-                                    className="form-control"
-                                    id="f_gender"
-                                    name="f_gender"
-                                    value={editFormData.f_gender}
-                                    onChange={handleInputChange}
-                                  />
-                                </div>
-                                <div className="form-group">
-                                  <label htmlFor="f_Course">Course</label>
-                                  <input
-                                    type="text"
-                                    className="form-control"
-                                    id="f_Course"
-                                    name="f_Course"
-                                    value={editFormData.f_Course}
-                                    onChange={handleInputChange}
-                                  />
-                                </div>
-                                <div className="form-group">
-                                  <label htmlFor="f_Createdate">
-                                    Create Date
-                                  </label>
-                                  <input
-                                    type="date"
-                                    className="form-control"
-                                    id="f_Createdate"
-                                    name="f_Createdate"
-                                    value={editFormData.f_Createdate}
-                                    onChange={handleInputChange}
-                                  />
-                                </div>
-
-                                <div className="d-flex justify-content-center">
-                                  <button
-                                    type="submit"
-                                    className="btn btn-primary mt-2"
-                                  >
-                                    Update
-                                  </button>
-                                </div>
-                              </form>
+                                </td>
+                                <td>{formData.f_Name}</td>
+                                <td>{formData.f_Email}</td>
+                                <td>{formData.f_Mobile}</td>
+                                <td>{formData.f_Designation}</td>
+                                <td>{formData.f_gender}</td>
+                                <td>{formData.f_Course}</td>
+                                <td>{formData.f_Createdate}</td>
+                                <td>
+                                  <i
+                                    className="fa-regular fa-pen-to-square icon_style"
+                                    onClick={() => handleEditClick(formData)}
+                                  ></i>{" "}
+                                </td>
+                              </tr>
+                            ))}
+                        </tbody>
+                      </table>
+                    </div>
+                    <Pagination size="sm" className="page">
+                      <Pagination.First
+                        onClick={() => handlePageChange(1)}
+                        disabled={formDataList.active === 1}
+                      />
+                      <Pagination.Prev
+                        onClick={() =>
+                          handlePageChange(formDataList.active - 1)
+                        }
+                        disabled={formDataList.active === 1}
+                      />
+                      {[...Array(formDataList.totalPages).keys()].map(
+                        (pageNumber) => (
+                          <Pagination.Item
+                            onClick={() => handlePageChange(pageNumber + 1)}
+                            key={pageNumber + 1}
+                            active={pageNumber + 1 === formDataList.active}
+                          >
+                            {pageNumber + 1}
+                          </Pagination.Item>
+                        )
+                      )}
+                      <Pagination.Next
+                        onClick={() =>
+                          handlePageChange(formDataList.active + 1)
+                        }
+                        disabled={
+                          formDataList.active === formDataList.totalPages
+                        }
+                      />
+                      <Pagination.Last
+                        onClick={() =>
+                          handlePageChange(formDataList.totalPages)
+                        }
+                        disabled={
+                          formDataList.active === formDataList.totalPages
+                        }
+                      />
+                    </Pagination>
+                    {isEditing && (
+                      <div className="modal">
+                        <div className="modal-content">
+                          <div className="card">
+                            <div className="card-header text-center head text-white">
+                              <img
+                                src={Img}
+                                alt=""
+                                width={70}
+                                className="rounded"
+                              />
+                              <h2 className="fs-4 mt-1 mb-1">
+                                Update Information
+                              </h2>
+                            </div>
+                            <div className="card-body table_body m-3">
+                              {error && <p style={{ color: "red" }}>{error}</p>}
+                              <div>
+                                <form onSubmit={handleFormSubmit}>
+                                  <div className="form-group">
+                                    <label htmlFor="f_Image">Image</label>
+                                    <input
+                                      type="file"
+                                      className="form-control"
+                                      id="f_Image"
+                                      name="f_Image"
+                                      onChange={handleFileInputChange}
+                                    />
+                                  </div>
+                                  <div className="form-group">
+                                    <label htmlFor="f_Name">Name</label>
+                                    <input
+                                      type="text"
+                                      className="form-control"
+                                      id="f_Name"
+                                      name="f_Name"
+                                      value={editFormData.f_Name}
+                                      onChange={handleInputChange}
+                                    />
+                                  </div>
+                                  <div className="form-group">
+                                    <label htmlFor="f_Email">Email</label>
+                                    <input
+                                      type="email"
+                                      className="form-control"
+                                      id="f_Email"
+                                      name="f_Email"
+                                      value={editFormData.f_Email}
+                                      onChange={handleInputChange}
+                                    />
+                                  </div>
+                                  <div className="form-group">
+                                    <label htmlFor="f_Mobile">Mobile</label>
+                                    <input
+                                      type="text"
+                                      className="form-control"
+                                      id="f_Mobile"
+                                      name="f_Mobile"
+                                      value={editFormData.f_Mobile}
+                                      onChange={handleInputChange}
+                                    />
+                                  </div>
+                                  <div className="form-group">
+                                    <label htmlFor="f_Designation">
+                                      Designation
+                                    </label>
+                                    <input
+                                      type="text"
+                                      className="form-control"
+                                      id="f_Designation"
+                                      name="f_Designation"
+                                      value={editFormData.f_Designation}
+                                      onChange={handleInputChange}
+                                    />
+                                  </div>
+                                  <div className="form-group">
+                                    <label htmlFor="f_gender">Gender</label>
+                                    <input
+                                      type="text"
+                                      className="form-control"
+                                      id="f_gender"
+                                      name="f_gender"
+                                      value={editFormData.f_gender}
+                                      onChange={handleInputChange}
+                                    />
+                                  </div>
+                                  <div className="form-group">
+                                    <label htmlFor="f_Course">Course</label>
+                                    <input
+                                      type="text"
+                                      className="form-control"
+                                      id="f_Course"
+                                      name="f_Course"
+                                      value={editFormData.f_Course}
+                                      onChange={handleInputChange}
+                                    />
+                                  </div>
+                                  <div className="form-group">
+                                    <label htmlFor="f_Createdate">
+                                      Create Date
+                                    </label>
+                                    <input
+                                      type="date"
+                                      className="form-control"
+                                      id="f_Createdate"
+                                      name="f_Createdate"
+                                      value={editFormData.f_Createdate}
+                                      onChange={handleInputChange}
+                                    />
+                                  </div>
+                                  <div className="d-flex justify-content-center">
+                                    <button
+                                      type="submit"
+                                      className="btn btn-primary mt-2"
+                                    >
+                                      Update
+                                    </button>
+                                  </div>
+                                </form>
+                              </div>
                             </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  )}
-                </>
-              </div>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>

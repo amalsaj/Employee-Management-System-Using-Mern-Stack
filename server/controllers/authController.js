@@ -1,11 +1,9 @@
 const jwt = require("jsonwebtoken");
 
 const authenticateUser = (req, res, next) => {
-  // Get the token from cookies
-  console.log("req.cookies: ", req.cookies['token']);
-  const cookieToken = req.cookies.token;
-  console.log("cookieToken:", cookieToken);
-  if (!cookieToken) {
+  const authHeader = req.headers.authorization;
+  const token = authHeader && authHeader.split(" ")[1];
+  if (!token) {
     console.log("Token is not provided");
     return res
       .status(401)
@@ -13,7 +11,7 @@ const authenticateUser = (req, res, next) => {
   }
 
   // Verify the token
-  jwt.verify(cookieToken, process.env.JWT_SECRET, (err, decoded) => {
+  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
     if (err) {
       if (err.name === "TokenExpiredError") {
         console.error("Token has expired");
@@ -25,7 +23,7 @@ const authenticateUser = (req, res, next) => {
           .json({ message: "Unauthorized - Invalid token" });
       }
     }
-    console.log(`Authorized - Valid token: ${cookieToken}`);
+    console.log(`Authorized - Valid token: ${token}`);
     req.user = decoded;
     next();
   });
