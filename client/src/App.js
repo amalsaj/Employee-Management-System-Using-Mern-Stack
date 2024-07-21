@@ -1,7 +1,7 @@
 import React from "react";
-import SignUpForm from "./components/SignUpForm";
+import SignUpForm from "./components/SignUp";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Signin from "./components/Sign_in";
+import Signin from "./components/SignIn";
 import "./App.css";
 import Dashboard from "./components/Dashboard";
 import Create from "./components/Create";

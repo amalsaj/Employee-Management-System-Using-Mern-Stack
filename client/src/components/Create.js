@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import './create.css'
 import Img from "../Images/emp.svg";
 import Image from "react-bootstrap/Image";
 import axios from "axios";

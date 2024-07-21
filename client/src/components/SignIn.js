@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import './signin.css'
 import { useNavigate } from "react-router-dom";
 import Logo from "../Images/logo.avif";
 import axios from "axios";
@@ -109,7 +110,7 @@ const LoginForm = () => {
                     Again!
                   </span>
                 </h1>
-                <h1 className="text-secondary logo mt-3">
+                <h1 className="text-secondary title mt-3">
                   Please Log In to Access Your Account <br></br>and Continue
                   Using Our Services
                 </h1>
@@ -151,7 +152,7 @@ const LoginForm = () => {
                   </div>
                   <ToastContainer />
                   <div className="justify-content-center d-flex align-items-center mt-5">
-                    <h1 className="text-secondary logo">
+                    <h1 className="text-secondary title">
                       Doesn't have an account yet?{" "}
                       <a href="/signup" className=" text-decoration-none">
                         Sign Up

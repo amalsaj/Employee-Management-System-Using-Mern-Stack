@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import './signup.css'
 import { useNavigate } from "react-router-dom";
 import Logo from "../Images/logo.avif";
 import { Image, Button, Container, Row, Col, Card } from "react-bootstrap";
@@ -59,12 +60,12 @@ const SignUpForm = () => {
   return (
     <Container fluid>
       <Row style={{ height: "100vh" }}>
-        <Col className="centered-image" xs={12} md={4} lg={4}>
-          <div className="m-4 text-white">
+        <Col className="centeredImage" xs={12} md={4} lg={4}>
+          <div className="m-4 mt-5 text-white">
             <h1 className="fw-bold">
               Join Us and <br></br> Unlock Endless <br></br>Possibilities!
             </h1>
-            <h1 className="logo">
+            <h1 className="titleStyle">
               Welcome! We're excited to have you on board.<br></br>Let's embark
               on this amazing journey together!
             </h1>
@@ -85,7 +86,7 @@ const SignUpForm = () => {
           </div>
         </Col>
         <Col xs={12} md={8} lg={8} className="text-center">
-          <Card className=" m-5 body_card">
+          <Card className=" m-5 bodyCard">
             <Card.Header className="bg-white">
               <Image
                 xs={1}
@@ -157,7 +158,7 @@ const SignUpForm = () => {
                   <ToastContainer />
                 </div>
                 <div className="justify-content-center d-flex align-items-center mt-5">
-                  <h1 className="text-secondary logo">
+                  <h1 className="text-secondary titleStyle">
                     Already had an Account?{" "}
                     <a href="/" className=" text-decoration-none">
                       Login
