@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 require("dotenv").config();
+const path = require("path");
 const PORT = process.env.PORT || 4000;
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
@@ -12,6 +13,7 @@ app.use(cors());
 
 app.use(cookieParser());
 
+app.use(express.static(path.join(__dirname, "build")));
 // Set up body parser middleware with the correct limits
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
